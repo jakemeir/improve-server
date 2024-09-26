@@ -9,10 +9,10 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const swagger = require('../swagger.json');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 app.use(express_1.default.json());
 app.use('/swagger', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger));
-app.get('/', (req, res) => {
+app.get('/users', (req, res) => {
     const data = {
         isSuccessful: true,
         displayMessage: null,

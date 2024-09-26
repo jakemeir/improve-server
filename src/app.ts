@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import SwaggerUI from 'swagger-ui-express';
 import dotenv from 'dotenv';
+import sequelize from './util/database';
 
 const swagger  = require('../swagger.json')
 
@@ -24,6 +25,12 @@ app.get('/users', (req: Request, res: Response) => {
     }
   res.json(data);
 });
+
+
+  sequelize.authenticate().then(t=> console.log('Connection has been established successfully.')).catch(e=>console.log(e)
+  )
+  
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
