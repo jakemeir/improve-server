@@ -1,4 +1,4 @@
-export interface ApiResponse {
+interface ApiResponse {
     isSuccessful: boolean;
     displayMessage: string | null;
     description: string | null;

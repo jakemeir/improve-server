@@ -4,11 +4,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const swagger = require('../swagger.json');
+dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 app.use(express_1.default.json());
+app.use('/swagger', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger));
 app.get('/', (req, res) => {
-    res.send('Hello, World!');
+    const data = {
+        isSuccessful: true,
+        displayMessage: null,
+        description: null,
+        exception: null,
+        timestamp: null,
+        data: {}
+    };
+    res.json(data);
 });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
