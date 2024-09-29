@@ -27,7 +27,7 @@ app.get('/users', (req: Request, res: Response) => {
 });
 
 
-  sequelize.authenticate().then(t=> console.log('Connection has been established successfully.')).catch(e=>console.log(e)
+  sequelize.authenticate().then(()=> console.log('Connection has been established successfully.')).catch(e=>console.log(e)
   )
   
 
