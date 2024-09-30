@@ -3,6 +3,7 @@ import SwaggerUI from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import User from './models/user';
+import userRoutes from './routes/user'
 
 const swagger  = require('../swagger.json')
 
@@ -13,19 +14,9 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use('/swagger', SwaggerUI.serve, SwaggerUI.setup(swagger));
 
-app.get('/', (req: Request, res: Response) => {
-    const data : ApiResponse   = {
-        isSuccessful:true,
-        displayMessage:null,
-        description:null,
-        exception:null,
-        timestamp:null,
-        data:{}
-        
-    }
-  res.json(data);
-});
 
+
+app.use(userRoutes);
 
 
 
