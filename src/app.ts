@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import User from './models/user';
 import userRoutes from './routes/user'
-import { error } from 'console';
+
 
 const swagger  = require('../swagger.json')
 
