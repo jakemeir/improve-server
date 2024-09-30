@@ -20,8 +20,8 @@ app.use(userRoutes);
 app.use((error:Error,req:Request,res:Response,next:NextFunction)=>{
   const data: ApiResponse = {
     isSuccessful: false,
-    displayMessage: 'Server error',
-    exception: "Internal server error",
+    displayMessage: error.message || "server error",
+    exception: error.name,
     timestamp: new Date(),
     data: null
   };
@@ -34,18 +34,9 @@ app.use((error:Error,req:Request,res:Response,next:NextFunction)=>{
 mongoose
   .connect(process.env.DB_URL)
   .then(() => {
-    User.findOne().then((u) => {
-      if (!u) {
-        const user = new User({
-          name: "jake",
-          email:'jake@test.com'
-          
-        });
-        user.save();
-      }
-    });
-
-    app.listen(port);
+   console.log('Connected to DB');
+    
+   app.listen(port);
   })
   .catch((e) => console.log(e));
 
