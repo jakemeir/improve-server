@@ -6,6 +6,14 @@ interface ApiResponse {
     data: object | null;
   }
 
+  interface IUser {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    role: string;
+  }
+
  declare namespace NodeJS {
     interface ProcessEnv {
       PORT : string;

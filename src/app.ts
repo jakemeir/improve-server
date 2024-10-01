@@ -2,7 +2,6 @@ import express, { Request, Response,NextFunction  } from 'express';
 import SwaggerUI from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import User from './models/user';
 import userRoutes from './routes/user'
 
 

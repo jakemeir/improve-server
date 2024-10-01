@@ -1,10 +1,37 @@
 import { Request, Response,NextFunction } from 'express';
 import User from '../models/user'
+import bcrypt from 'bcrypt';
 
-export const  createUser = (req:Request, res:Response, next:NextFunction):void=>{
+export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { firstName, lastName, phone, email, role, password } = req.body;
 
+    const hashedPassword = await bcrypt.hash(password, 10);
 
+    const newUser = new User({
+      firstName,
+      lastName,
+      phone,
+      email,
+      role,
+      password: hashedPassword,
+    });
 
+    await newUser.save();
+
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage: 'User created successfully',
+      exception: null,
+      timestamp: new Date(),
+      data: newUser,
+    };
+
+    res.status(201).json(data);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    next(error);
+  }
 
 
 
