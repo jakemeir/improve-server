@@ -13,7 +13,7 @@ export const  createUser = (req:Request, res:Response, next:NextFunction):void=>
 
 export const getUser = async (req: Request, res: Response,next: NextFunction):Promise<void> => {
     try {
-      const user = await User.findById(req.body.id);
+      const user = await User.findById(req.params.userId);
       
       const data: ApiResponse = {
         isSuccessful: !!user,

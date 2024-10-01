@@ -37,6 +37,8 @@ mongoose
    console.log('Connected to DB');
     
    app.listen(port);
+   console.log(port);
+   
   })
   .catch((e) => console.log(e));
 
