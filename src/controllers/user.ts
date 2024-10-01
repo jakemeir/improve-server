@@ -29,6 +29,27 @@ export const getUser = async (req: Request, res: Response,next: NextFunction):Pr
     }
   };
 
+export const deleteUser= async (req: Request, res: Response,next: NextFunction):Promise<any> => {
+  try{
+   const response  = await User.findByIdAndDelete(req.params.userId);
+   const data: ApiResponse = {
+    isSuccessful: !!response,
+    displayMessage: response ? null : "User not found",
+    exception: response ? null : "User not found",
+    timestamp: new Date(),
+    data:null,
+  };
+  
+  res.status(response?200:404).json(data);
+  }catch(error) {
+    next(error);
+   }
+
+
+}
+
+
+
 export const getUsers = async (req: Request, res: Response,next: NextFunction):Promise<any> =>{
 
   
