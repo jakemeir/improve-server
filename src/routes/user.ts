@@ -21,24 +21,31 @@ const userValidator = [
     .isAlpha()
     .withMessage('Last name should contain only letters.'),
 
-  body('phone')
+ body('phone')
     .trim()
     .notEmpty()
     .withMessage('Phone number is required.')
     .isMobilePhone('any')
-    .withMessage('Please enter a valid phone number.'),
+    .withMessage('Please enter a valid phone number.')
+    .custom((value) => {
+        return User.findOne({ phone: value }).then(userDoc => {
+          if (userDoc) {
+            return Promise.reject('Phone number already exists!');
+          }
+        });
+      }),
 
   body('email')
     .isEmail()
     .withMessage('Please enter a valid email.')
-    .custom(async (value) => {
-      const existingUser = await User.findOne({ email: value });
-      if (existingUser) {
-        throw new Error('E-Mail address already exists!');
-      }
-    })
+    .custom((value) => {
+        return User.findOne({ email: value }).then(userDoc => {
+          if (userDoc) {
+            return Promise.reject('E-Mail address already exists!');
+          }
+        });
+      })
     .normalizeEmail(),
-
   body('role')
     .trim()
     .notEmpty()
