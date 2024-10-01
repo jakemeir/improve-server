@@ -34,11 +34,11 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction):P
   
     
     try{
-      let users
-      if(!req.query.q){
+      let users = null;
+      const query =  req.query.q?.toString().trim();
+      if(query){
          users = await User.find();
       }else{
-        const query =  req.query.q;
         users = await User.find({
           $or: [
               { lastName: { $regex: query} },
@@ -46,13 +46,9 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction):P
               { email: { $regex: query} }
           ]
       })
-
-
       }
 
-
-    
-      if(Array.isArray(users) && users.length === 0)users = null;
+      if(users.length === 0)users = null;
       const data: ApiResponse = {
         isSuccessful: !!users,
         displayMessage: users ? null : "Users not found",
@@ -66,10 +62,4 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction):P
     } catch(error) {
     return next(error);
     }
-
-
-
-
-  
-
 }
