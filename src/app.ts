@@ -2,7 +2,6 @@ import express, { Request, Response,NextFunction  } from 'express';
 import SwaggerUI from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import User from './models/user';
 import userRoutes from './routes/user'
 
 
@@ -20,8 +19,8 @@ app.use(userRoutes);
 app.use((error:Error,req:Request,res:Response,next:NextFunction)=>{
   const data: ApiResponse = {
     isSuccessful: false,
-    displayMessage: error.message || "server error",
-    exception: error.name,
+    displayMessage:  "server error",
+    exception: error.message || null,
     timestamp: new Date(),
     data: null
   };
