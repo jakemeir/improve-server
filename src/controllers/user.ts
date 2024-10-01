@@ -11,13 +11,9 @@ export const  createUser = (req:Request, res:Response, next:NextFunction):void=>
 
 }
 
-export const getUser = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+export const getUser = async (req: Request, res: Response,next: NextFunction):Promise<void> => {
     try {
-      const user = await User.findById(req.body?.id);
+      const user = await User.findById(req.params.userId);
       
       const data: ApiResponse = {
         isSuccessful: !!user,
@@ -27,9 +23,9 @@ export const getUser = async (
         data: user ? user:null,
       };
       
-      res.json(data);
+      res.status(user?200:404).json(data);
     } catch (error) {
-      next(error);
+     next(error);
     }
   };
 
