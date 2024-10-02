@@ -57,7 +57,7 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction):P
     try{
       let users = null;
       const query =  req.query.q?.toString().trim();
-      if(query){
+      if(!query){
          users = await User.find();
       }else{
         users = await User.find({
