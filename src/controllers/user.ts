@@ -45,6 +45,53 @@ export const  createUser = async (req:Request, res:Response, next:NextFunction)=
   }
 }
 
+export const updateUser = async (req: Request, res: Response, next: NextFunction)=>{
+
+
+  try {
+    const { firstName,lastName, phone, email} = req.body;
+
+    const result = validationResult(req);
+  
+    if (!result.isEmpty()) {
+      const error:CustomError = new Error(result.array()[0].msg);
+      error.statusCode = 422;
+      throw error;
+    }
+
+    const updatedUser = new User({
+      firstName,
+      lastName,
+      phone,
+      email,
+    });
+
+    const response =  await User.findByIdAndUpdate(req.params.userId,updatedUser,{ new: true });
+
+    if(!response){
+      const error:CustomError = new Error("user not found")
+      error.statusCode = 404
+      throw error;
+    }
+
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage: null,
+      exception: null,
+      timestamp: new Date(),
+      data: response,
+    };
+
+    res.status(200).json(data);
+
+    
+  } catch (error) {
+    next(error);
+    
+  }
+
+}
+
 export const getUser = async (req: Request, res: Response,next: NextFunction)=> {
     try {
       const user = await User.findById(req.params.userId);
