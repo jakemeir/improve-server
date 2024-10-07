@@ -9,10 +9,22 @@ interface ApiResponse {
  declare namespace NodeJS {
     interface ProcessEnv {
       PORT : string;
-      DB_URL:string
+      DB_URL:string;
 
       
       
       
     }
   }  
+
+  declare class CustomError extends Error {
+    statusCode?: number;
+}
+
+
+    declare namespace NodeJS {
+        interface CustomError {
+            statusCode?: number;
+        }
+    }
+
