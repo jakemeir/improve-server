@@ -1,0 +1,136 @@
+import { Request, Response,NextFunction } from 'express';
+import User from '../models/user'
+import bcrypt from 'bcrypt';
+
+export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { firstName, lastName, phone, email, role, password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      firstName,
+      lastName,
+      phone,
+      email,
+      role,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage: 'User created successfully',
+      exception: null,
+      timestamp: new Date(),
+      data: newUser,
+    };
+
+    res.status(201).json(data);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    next(error);
+  }
+
+
+
+
+}
+
+export const getUser = async (req: Request, res: Response,next: NextFunction):Promise<any> => {
+    try {
+      const user = await User.findById(req.params.userId);
+      
+      const data: ApiResponse = {
+        isSuccessful: !!user,
+        displayMessage: user ? null : "User not found",
+        exception: user ? null : "User not found",
+        timestamp: new Date(),
+        data: user ? user:null,
+      };
+      
+      res.status(user?200:404).json(data);
+    } catch (error) {
+     next(error);
+    }
+  };
+
+export const getUsers = async (req: Request, res: Response,next: NextFunction):Promise<any> =>{
+
+  
+    
+    try{
+      let users
+      if(!req.query.q){
+         users = await User.find();
+      }else{
+        const query =  req.query.q;
+        users = await User.find({
+          $or: [
+              { lastName: { $regex: query} },
+              { firstName: { $regex: query} },
+              { email: { $regex: query} }
+          ]
+      })
+
+
+      }
+
+
+    
+      if(Array.isArray(users) && users.length === 0)users = null;
+      const data: ApiResponse = {
+        isSuccessful: !!users,
+        displayMessage: users ? null : "Users not found",
+        exception: users ? null : "Users not found",
+        timestamp: new Date(),
+        data: users ? users:null,
+      };
+      return res.status(users?200:404).json(data);
+      
+
+    } catch(error) {
+    return next(error);
+    }
+
+  export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const userId = req.params.userId;
+    const { firstName, lastName, phone, email, role, password } = req.body;
+
+    const updateData: any = {
+      ...(firstName && { firstName }),
+      ...(lastName && { lastName }),
+      ...(phone && { phone }),
+      ...(email && { email }),
+      ...(role && { role }),
+    };
+
+    if (password) {
+      updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+
+    const data: ApiResponse = {
+      isSuccessful: !!updatedUser,
+      displayMessage: updatedUser ? 'User updated successfully' : 'User not found',
+      exception: updatedUser ? null : 'User not found',
+      timestamp: new Date(),
+      data: updatedUser || null,
+    };
+
+    res.status(updatedUser ? 200 : 404).json(data);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    next(error);
+  }
+};
+
+
+
+
+  
+
+}
