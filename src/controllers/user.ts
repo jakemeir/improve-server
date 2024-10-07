@@ -14,16 +14,22 @@ export const  createUser = (req:Request, res:Response, next:NextFunction):void=>
 export const getUser = async (req: Request, res: Response,next: NextFunction):Promise<any> => {
     try {
       const user = await User.findById(req.params.userId);
+
+      if(!user){
+        const error:CustomError = new Error("user not found")
+        error.statusCode = 404
+        throw error;
+      }
       
       const data: ApiResponse = {
-        isSuccessful: !!user,
-        displayMessage: user ? null : "User not found",
-        exception: user ? null : "User not found",
+        isSuccessful: true,
+        displayMessage:  null,
+        exception: null ,
         timestamp: new Date(),
-        data: user ? user:null,
+        data: user ,
       };
       
-      res.status(user?200:404).json(data);
+      res.status(200).json(data);
     } catch (error) {
      next(error);
     }

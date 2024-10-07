@@ -14,16 +14,18 @@ app.use('/swagger', SwaggerUI.serve, SwaggerUI.setup(swagger));
 app.use(userRoutes);
 
 
-app.use((error:Error,req:Request,res:Response,next:NextFunction)=>{
+app.use((error:CustomError,req:Request,res:Response,next:NextFunction)=>{
   const data: ApiResponse = {
     isSuccessful: false,
-    displayMessage:  "server error",
-    exception: error.message || null,
+    displayMessage:  error.message,
+    exception: error.name,
     timestamp: new Date(),
     data: null
   };
 
-  res.status(500).json(data)
+  const statusCode = error.statusCode || 500;
+
+  res.status(statusCode).json(data)
 
 })
 
