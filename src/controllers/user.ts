@@ -38,10 +38,18 @@ export const getUser = async (req: Request, res: Response,next: NextFunction):Pr
 export const deleteUser= async (req: Request, res: Response,next: NextFunction):Promise<any> => {
   try{
    const response  = await User.findByIdAndDelete(req.params.userId);
+
+   if(!response){
+    const error:CustomError = new Error("user not found")
+    error.statusCode = 404
+    throw error;
+  }
+
+
    const data: ApiResponse = {
-    isSuccessful: !!response,
-    displayMessage: response ? null : "User not found",
-    exception: response ? null : "User not found",
+    isSuccessful: true,
+    displayMessage:  null ,
+    exception:  null ,
     timestamp: new Date(),
     data:null,
   };
@@ -76,14 +84,20 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction):P
       }
 
       if(users.length === 0)users = null;
+
+      if(!users){
+        const error:CustomError = new Error("users not found")
+        error.statusCode = 404
+        throw error;
+      }
       const data: ApiResponse = {
-        isSuccessful: !!users,
-        displayMessage: users ? null : "Users not found",
-        exception: users ? null : "Users not found",
+        isSuccessful: true,
+        displayMessage: null,
+        exception: null,
         timestamp: new Date(),
-        data: users ? users:null,
+        data: users
       };
-      return res.status(users?200:404).json(data);
+      return res.status(200).json(data);
       
 
     } catch(error) {
