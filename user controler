@@ -19,6 +19,12 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
     await newUser.save();
 
+    if(user){
+        const error:CustomError = new Error("user alredy existed")
+        error.statusCode = 422
+        throw error;
+    }
+
     const data: ApiResponse = {
       isSuccessful: true,
       displayMessage: 'User created successfully',
@@ -29,7 +35,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
     res.status(201).json(data);
   } catch (error) {
-    console.error('Error creating user:', error);
     next(error);
   }
 
@@ -113,6 +118,12 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction):P
 
     const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
 
+      if(!user){
+        const error:CustomError = new Error("user not found")
+        error.statusCode = 404
+        throw error;
+      }
+
     const data: ApiResponse = {
       isSuccessful: !!updatedUser,
       displayMessage: updatedUser ? 'User updated successfully' : 'User not found',
@@ -123,14 +134,10 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction):P
 
     res.status(updatedUser ? 200 : 404).json(data);
   } catch (error) {
-    console.error('Error updating user:', error);
     next(error);
   }
 };
 
 
-
-
-  
 
 }
