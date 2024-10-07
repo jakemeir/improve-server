@@ -3,9 +3,7 @@ import SwaggerUI from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoutes from './routes/user'
-
-
-const swagger  = require('../swagger.json')
+import swagger from '../swagger.json'
 
 const port = process.env.PORT || 3000;
 dotenv.config();
