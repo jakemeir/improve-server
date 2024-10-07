@@ -1,17 +1,51 @@
 import { Request, Response,NextFunction } from 'express';
+import { validationResult } from 'express-validator';
+import bcrypt from 'bcrypt';
 import User from '../models/user'
+import { error } from 'console';
 
-export const  createUser = (req:Request, res:Response, next:NextFunction):void=>{
+export const  createUser = async (req:Request, res:Response, next:NextFunction)=>{
 
+  try {
+    const { firstName,lastName, phone, email,password} = req.body;
 
+    const result = validationResult(req);
 
+    if (!result.isEmpty()) {
+      const error:CustomError = new Error(result.array()[0].msg);
+      error.statusCode = 422;
+      throw error;
+    }
 
+    const hashedPassword = await bcrypt.hash(password, 12);
 
+    const newUser = new User({
+      firstName,
+      lastName,
+      phone,
+      email,
+      password: hashedPassword,
+    });
 
+    await newUser.save();
 
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage: null,
+      exception: null,
+      timestamp: new Date(),
+      data: newUser,
+    };
+
+    res.status(201).json(data);
+
+  } catch (error) {
+    next(error);
+    
+  }
 }
 
-export const getUser = async (req: Request, res: Response,next: NextFunction):Promise<any> => {
+export const getUser = async (req: Request, res: Response,next: NextFunction)=> {
     try {
       const user = await User.findById(req.params.userId);
 
@@ -35,7 +69,7 @@ export const getUser = async (req: Request, res: Response,next: NextFunction):Pr
     }
   };
 
-export const deleteUser= async (req: Request, res: Response,next: NextFunction):Promise<any> => {
+export const deleteUser= async (req: Request, res: Response,next: NextFunction)=> {
   try{
    const response  = await User.findByIdAndDelete(req.params.userId);
 
@@ -54,7 +88,7 @@ export const deleteUser= async (req: Request, res: Response,next: NextFunction):
     data:null,
   };
   
-  res.status(response?200:404).json(data);
+    res.status(response?200:404).json(data);
   }catch(error) {
     next(error);
    }
@@ -64,7 +98,7 @@ export const deleteUser= async (req: Request, res: Response,next: NextFunction):
 
 
 
-export const getUsers = async (req: Request, res: Response,next: NextFunction):Promise<any> =>{
+export const getUsers = async (req: Request, res: Response,next: NextFunction)=>{
 
   
     
@@ -97,10 +131,10 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction):P
         timestamp: new Date(),
         data: users
       };
-      return res.status(200).json(data);
+      res.status(200).json(data);
       
 
     } catch(error) {
-    return next(error);
+      next(error);
     }
 }
