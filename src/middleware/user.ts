@@ -16,6 +16,17 @@ const userValidator = [
     .isAlpha()
     .withMessage('Last name should contain only letters.'),
 
+    body('email')
+    .isEmail()
+    .withMessage('Please enter a valid email.')
+    .custom(async (value) => {
+      const existingUser = await User.findOne({ email: value });
+      if (existingUser) {
+        return Promise.reject('E-Mail address already exists!');
+      }
+    })
+    .normalizeEmail(),  
+
   body('phone')
     .trim()
     .notEmpty()
@@ -29,18 +40,7 @@ const userValidator = [
       }
     }),
 
-  body('email')
-    .isEmail()
-    .withMessage('Please enter a valid email.')
-    .custom(async (value) => {
-      const existingUser = await User.findOne({ email: value });
-      if (existingUser) {
-        return Promise.reject('E-Mail address already exists!');
-      }
-    })
-    .normalizeEmail(),
-
-  body('password')
+body('password')
     .optional()
     .trim()
     .notEmpty()

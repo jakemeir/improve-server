@@ -2,7 +2,6 @@ import { Request, Response,NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import User from '../models/user'
-import { error } from 'console';
 
 export const  createUser = async (req:Request, res:Response, next:NextFunction)=>{
 
