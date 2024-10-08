@@ -196,27 +196,22 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction)=>
 export const exportUser = async (req: Request, res: Response,next: NextFunction)=>{
   res.setHeader('Content-Disposition', 'attachment; filename="user-list.csv"');
   res.setHeader('Content-Type', 'text/csv');
-
-  const passThrough = new PassThrough();
-  
-  passThrough.pipe(res);
-
-  passThrough.write('firstName,lastName,email,phone,role\n');
+  res.write('firstName,lastName,email,phone,role\n');
 
   const cursor = User.find().cursor();
 
   cursor.on('data',(user)=>{
     const csvRow = `${user.firstName},${user.lastName},${user.email},${user.phone},${user.role}\n`;
-    passThrough.write(csvRow);
+    res.write(csvRow);
   })
 
   cursor.on('end', () => {
-    passThrough.end();
-});
+    res.end();
+  });
 
-cursor.on('error', (err) => {
- next(err)
-});
+  cursor.on('error', (err) => {
+    next(err)
+  });
 
   
 }
