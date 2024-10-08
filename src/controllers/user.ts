@@ -2,6 +2,14 @@ import { Request, Response,NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import User from '../models/user'
+import { PassThrough } from 'stream';
+// import fs from 'fs/promises'
+
+
+
+
+
+
 
 export const  createUser = async (req:Request, res:Response, next:NextFunction)=>{
 
@@ -184,3 +192,32 @@ export const getUsers = async (req: Request, res: Response,next: NextFunction)=>
       next(error);
     }
 }
+
+export const exportUser = async (req: Request, res: Response,next: NextFunction)=>{
+  res.setHeader('Content-Disposition', 'attachment; filename="user-list.csv"');
+  res.setHeader('Content-Type', 'text/csv');
+
+  const passThrough = new PassThrough();
+  
+  passThrough.pipe(res);
+
+  passThrough.write('firstName,lastName,email,phone,role\n');
+
+  const cursor = User.find().cursor();
+
+  cursor.on('data',(user)=>{
+    const csvRow = `${user.firstName},${user.lastName},${user.email},${user.phone},${user.role}\n`;
+    passThrough.write(csvRow);
+  })
+
+  cursor.on('end', () => {
+    passThrough.end();
+});
+
+cursor.on('error', (err) => {
+ next(err)
+});
+
+  
+}
+
