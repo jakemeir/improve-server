@@ -31,7 +31,7 @@ const userValidator = [
     .trim()
     .notEmpty()
     .withMessage('Phone number is required.')
-    .isMobilePhone('any')
+    .isMobilePhone('he-IL')
     .withMessage('Please enter a valid phone number.')
     .custom(async (value) => {
       const existingUser = await User.findOne({ phone: value });
