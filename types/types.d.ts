@@ -10,6 +10,7 @@ interface ApiResponse {
     interface ProcessEnv {
       PORT : string;
       DB_URL:string;
+      PRIVATE_KEY:string;
 
       
       

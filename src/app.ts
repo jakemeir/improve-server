@@ -3,7 +3,9 @@ import SwaggerUI from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoutes from './routes/user'
+import authRoutes from './routes/auth'
 import swagger from '../swagger.json'
+import guard from './middleware/auth'
 
 
 
@@ -21,6 +23,8 @@ app.use((req:Request, res:Response, next:NextFunction) => {
 
 app.use(express.json());
 app.use('/swagger', SwaggerUI.serve, SwaggerUI.setup(swagger));
+app.use(guard)
+app.use(authRoutes)
 app.use(userRoutes);
 
 

@@ -2,14 +2,6 @@ import { Request, Response,NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import User from '../models/user'
-import { PassThrough } from 'stream';
-// import fs from 'fs/promises'
-
-
-
-
-
-
 
 export const  createUser = async (req:Request, res:Response, next:NextFunction)=>{
 
@@ -153,9 +145,6 @@ export const deleteUser= async (req: Request, res: Response,next: NextFunction)=
 
 
 export const getUsers = async (req: Request, res: Response,next: NextFunction)=>{
-
-  
-    
     try{
       let users = null;
       const query =  req.query.q?.toString().trim();
