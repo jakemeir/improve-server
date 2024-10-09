@@ -14,7 +14,6 @@ router.put('/users/:userId', userValidator,updateUser)
 
 router.get('/users/:userId',getUser)
 
-
 router.delete('/users/:userId',deleteUser)
 
 

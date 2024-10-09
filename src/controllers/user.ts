@@ -145,9 +145,6 @@ export const deleteUser= async (req: Request, res: Response,next: NextFunction)=
 
 
 export const getUsers = async (req: Request, res: Response,next: NextFunction)=>{
-
-  
-    
     try{
       let users = null;
       const query =  req.query.q?.toString().trim();
