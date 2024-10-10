@@ -5,12 +5,6 @@ import { Request, Response,NextFunction } from 'express';
 dotenv.config();
 
 export default async (req:Request, res:Response, next:NextFunction)=>{
-
-    if(req.method === "POST" && (req.path === "/login" || req.path === '/users')){
-       return next();
-    }
-
-
     const token = req.get('Authorization') || '';
     let decodedToken;
     try {
