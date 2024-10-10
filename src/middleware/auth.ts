@@ -5,11 +5,14 @@ import { Request, Response,NextFunction } from 'express';
 dotenv.config();
 
 export default async (req:Request, res:Response, next:NextFunction)=>{
+    
+    // return next()
+
     const token = req.get('Authorization') || '';
     let decodedToken;
     try {
 
-        decodedToken = jwt.verify(token,process.env.PRIVATE_KEY);
+        decodedToken = jwt.verify(token,process.env.PRIVATE_KEY) as jwt.JwtPayload;
 
         
     } catch (error) {
@@ -20,6 +23,8 @@ export default async (req:Request, res:Response, next:NextFunction)=>{
         error.statusCode = 401
         return next(error);
     }
+
+    req.body.userId = decodedToken.userId;
 
    next();
 }
