@@ -4,17 +4,17 @@ import userValidator from "../middleware/user";
 
 const router = express.Router();
 
-router.post('/users', userValidator,createUser)
+router.post('/', userValidator,createUser)
 
-router.get('/users',getUsers)
+router.get('/',getUsers)
 
-router.get('/users/export', exportUser)
+router.get('/export', exportUser)
 
-router.put('/users/:userId', userValidator,updateUser)
+router.put('/:userId', userValidator,updateUser)
 
-router.get('/users/:userId',getUser)
+router.get('/:userId',getUser)
 
-router.delete('/users/:userId',deleteUser)
+router.delete('/:userId',deleteUser)
 
 
 

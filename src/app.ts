@@ -24,8 +24,8 @@ app.use((req:Request, res:Response, next:NextFunction) => {
 app.use(express.json());
 app.use('/swagger', SwaggerUI.serve, SwaggerUI.setup(swagger));
 app.use(guard)
-app.use(authRoutes)
-app.use(userRoutes);
+app.use("/auth",authRoutes)
+app.use("/users",userRoutes);
 
 
 app.use((error:CustomError,req:Request,res:Response,next:NextFunction)=>{
