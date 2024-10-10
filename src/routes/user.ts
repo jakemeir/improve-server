@@ -1,20 +1,21 @@
 import express from "express";
 import {createUser,updateUser, getUser,getUsers,deleteUser,exportUser} from "../controllers/user"
 import userValidator from "../middleware/user";
+import guard from '../middleware/auth'
 
 const router = express.Router();
 
-router.post('/', userValidator,createUser)
+router.post('/', guard, userValidator,createUser)
 
-router.get('/',getUsers)
+router.get('/',guard,getUsers)
 
-router.get('/export', exportUser)
+router.get('/export',guard, exportUser)
 
-router.put('/:userId', userValidator,updateUser)
+router.put('/:userId',guard, userValidator,updateUser)
 
-router.get('/:userId',getUser)
+router.get('/:userId', guard,getUser)
 
-router.delete('/:userId',deleteUser)
+router.delete('/:userId',guard,deleteUser)
 
 
 
