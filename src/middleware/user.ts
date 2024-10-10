@@ -19,9 +19,9 @@ const userValidator = [
     body('email')
     .isEmail()
     .withMessage('Please enter a valid email.')
-    .custom(async (value) => {
+    .custom(async (value,{req}) => {
       const existingUser = await User.findOne({ email: value });
-      if (existingUser) {
+      if (existingUser && req.body.userId !== existingUser._id.toString()) {
         return Promise.reject('E-Mail address already exists!');
       }
     })
@@ -33,9 +33,9 @@ const userValidator = [
     .withMessage('Phone number is required.')
     .isMobilePhone('he-IL')
     .withMessage('Please enter a valid phone number.')
-    .custom(async (value) => {
+    .custom(async (value,{req}) => {
       const existingUser = await User.findOne({ phone: value });
-      if (existingUser) {
+      if (existingUser && req.body.userId !== existingUser._id.toString()) {
         return Promise.reject('Phone number already exists!');
       }
     }),
