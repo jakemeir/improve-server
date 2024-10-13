@@ -5,18 +5,6 @@ interface ApiResponse {
     timestamp: Date | null;
     data: object | null;
   }
-
- declare namespace NodeJS {
-    interface ProcessEnv {
-      PORT : string;
-      DB_URL:string;
-
-      
-      
-      
-    }
-  }  
-
   declare class CustomError extends Error {
     statusCode?: number;
 }
