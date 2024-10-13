@@ -9,7 +9,7 @@ import cors from 'cors';
 
 
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT as string || 8080;
 dotenv.config();
 const app = express();
 
@@ -38,7 +38,7 @@ app.use((error:CustomError,req:Request,res:Response,next:NextFunction)=>{
 
 
 mongoose
-  .connect(process.env.DB_URL)
+  .connect(process.env.DB_URL as string)
   .then(() => {
    console.log('Connected to DB');
     
