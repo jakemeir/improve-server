@@ -48,7 +48,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 
   try {
-    const { firstName,lastName, phone, email} = req.body;
+    const { firstName,lastName, phone, email,role} = req.body;
 
     const result = validationResult(req);
   
@@ -58,12 +58,13 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
       throw error;
     }
 
-    const updatedUser = new User({
+    const updatedUser = {
       firstName,
       lastName,
       phone,
       email,
-    });
+      role
+    };
 
     const response =  await User.findByIdAndUpdate(req.params.userId,updatedUser,{ new: true });
 
