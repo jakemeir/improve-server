@@ -12,7 +12,7 @@ export default async (req:Request, res:Response, next:NextFunction)=>{
     let decodedToken;
     try {
 
-        decodedToken = jwt.verify(token,process.env.PRIVATE_KEY) as jwt.JwtPayload;
+        decodedToken = jwt.verify(token,process.env.PRIVATE_KEY as string) as jwt.JwtPayload;
 
         
     } catch (error) {
