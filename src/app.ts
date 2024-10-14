@@ -22,6 +22,8 @@ app.use("/users",userRoutes);
 
 
 app.use((error:CustomError,req:Request,res:Response,next:NextFunction)=>{
+  console.log(error);
+  
   const data: ApiResponse = {
     isSuccessful: false,
     displayMessage:  error.message,
