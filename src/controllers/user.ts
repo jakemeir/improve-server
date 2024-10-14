@@ -49,7 +49,6 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
   try {
     const { firstName,lastName, phone, email, role} = req.body;
-    const { firstName,lastName, phone, email,role} = req.body;
 
     const result = validationResult(req);
   
