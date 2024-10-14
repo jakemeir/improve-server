@@ -89,7 +89,7 @@ export const googleCallback = async (req:Request, res:Response, next:NextFunctio
          {expiresIn:"1h"}
          )
 
-        res.cookie('jwt', token,);
+        res.cookie('token', token,);
       
         res.redirect("http://localhost:3000")
 
