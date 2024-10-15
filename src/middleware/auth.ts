@@ -24,7 +24,7 @@ export default async (req:Request, res:Response, next:NextFunction)=>{
         return next(error);
     }
 
-    req.body.userId = decodedToken.userId;
+    req.body.userId = decodedToken.id;
 
    next();
 }
