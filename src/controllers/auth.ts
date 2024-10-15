@@ -91,7 +91,7 @@ export const googleCallback = async (req:Request, res:Response, next:NextFunctio
 
         res.cookie('token', token,);
       
-        res.redirect("http://localhost:3000")
+        res.redirect("http://localhost:3000/users")
 
 
 
