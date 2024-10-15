@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const exerciseSchema = new mongoose.Schema(
+const recipeSchema = new mongoose.Schema(
  {
     name:{
         type: String,
@@ -28,4 +28,4 @@ const exerciseSchema = new mongoose.Schema(
  }
 )
 
- export default mongoose.model("Exercise",exerciseSchema)
+ export default mongoose.model("Recipe",recipeSchema)
