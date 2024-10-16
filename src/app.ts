@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoutes from './routes/user'
 import authRoutes from './routes/auth'
+import exerciseRoutes from './routes/exercise';
+import recipeRoutes from './routes/recipe';
 import swagger from '../swagger.json'
 import cors from 'cors';
 
@@ -19,6 +21,9 @@ app.use(express.json());
 app.use('/swagger', SwaggerUI.serve, SwaggerUI.setup(swagger));
 app.use("/auth",authRoutes)
 app.use("/users",userRoutes);
+app.use('/exercises',exerciseRoutes)
+app.use('/recipe',recipeRoutes);
+ 
 
 
 app.use((error:CustomError,req:Request,res:Response,next:NextFunction)=>{
