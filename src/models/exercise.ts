@@ -11,15 +11,15 @@ const exerciseSchema = new mongoose.Schema(
     },
     sets:{
         type: Number,
-        required: true
+        // required: true
     },
     times:{
         type: Number,
-        required: true
+        // required: true
     },
     category:{
         type: String,
-        required: true
+        // required: true
     },
     status:{
         type:Boolean,
