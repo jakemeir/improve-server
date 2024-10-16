@@ -48,7 +48,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 
   try {
-    const { firstName,lastName, phone, email,role} = req.body;
+    const { firstName,lastName, phone, email, role} = req.body;
 
     const result = validationResult(req);
   
@@ -66,7 +66,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
       role
     };
 
-    const response =  await User.findByIdAndUpdate(req.params.userId,updatedUser,{ new: true });
+    const response =  await User.findByIdAndUpdate(req.params.userId, updatedUser,{ new: true });
 
     if(!response){
       const error:CustomError = new Error("user not found")
@@ -142,8 +142,6 @@ export const deleteUser= async (req: Request, res: Response,next: NextFunction)=
 
 
 }
-
-
 
 export const getUsers = async (req: Request, res: Response,next: NextFunction)=>{
     try{
