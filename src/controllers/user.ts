@@ -66,7 +66,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
       role
     };
 
-    const response =  await User.findByIdAndUpdate(req.params.userId,{ firstName, lastName, phone, email, role },{ new: true });
+    const response =  await User.findByIdAndUpdate(req.params.userId, updatedUser,{ new: true });
 
     if(!response){
       const error:CustomError = new Error("user not found")
