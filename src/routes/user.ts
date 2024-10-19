@@ -5,7 +5,7 @@ import guard from '../middleware/auth'
 
 const router = express.Router();
 
-router.post('/', guard, userValidator,createUser)
+router.post('/', userValidator,createUser)
 
 router.get('/',guard,getUsers)
 
