@@ -154,3 +154,37 @@ export const getExercises = async (req: Request, res: Response,next: NextFunctio
     next(error);
   }
 }
+
+export const deleteExercise= async (req: Request, res: Response,next: NextFunction)=> {
+  try{
+   const response  = await Exercise.findByIdAndDelete(req.params.exerciseId);
+
+   if(!response){
+    const error:CustomError = new Error("exercise not found")
+    error.statusCode = 404
+    throw error;
+  }
+
+
+   const data: ApiResponse = {
+    isSuccessful: true,
+    displayMessage:  null ,
+    exception:  null ,
+    timestamp: new Date(),
+    data:null,
+  };
+  
+    res.status(200).json(data);
+
+    if(response.imgPath){
+      fs.unlinkSync(response.imgPath)
+      
+    }
+
+
+  }catch(error) {
+    next(error);
+   }
+
+
+}
