@@ -15,7 +15,7 @@ const port = process.env.PORT as string || 8080;
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/images",guard,express.static(path.join(__dirname,"images")))
+app.use("/images",express.static(path.join(__dirname,"images")))
 app.use('/swagger', SwaggerUI.serve, SwaggerUI.setup(swagger));
 app.use("/auth",authRoutes)
 app.use("/users",userRoutes);
