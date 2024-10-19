@@ -188,3 +188,33 @@ export const deleteExercise= async (req: Request, res: Response,next: NextFuncti
 
 
 }
+
+export const exportExercise = async (req: Request, res: Response,next: NextFunction)=>{
+
+try {
+
+  res.setHeader('Content-Disposition', 'attachment; filename="exercise-list.csv"');
+  res.setHeader('Content-Type', 'text/csv');
+  res.write('name,description,sets,times,category,status\n');
+
+  const cursor = Exercise.find().cursor();
+
+  cursor.on('data',(exercise)=>{
+    const csvRow = `${exercise.name},${exercise.description},${exercise.sets},${exercise.times},${exercise.category},${exercise.status}\n`;
+    res.write(csvRow);
+  })
+
+  cursor.on('end', () => {
+    res.end();
+  });
+
+  cursor.on('error', (err) => {
+    next(err)
+  });
+  
+} catch (error) {
+
+  next(error)
+}
+
+}
