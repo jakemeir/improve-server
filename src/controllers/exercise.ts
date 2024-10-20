@@ -49,10 +49,15 @@ export const  createExercise= async (req:Request, res:Response, next:NextFunctio
         res.status(201).json(data);
     
       } catch (error) {
-        if(imgPath){
+
+        try {
+          if(imgPath){
             fs.unlinkSync(imgPath)
         }
-        
+        } catch (error) {
+          console.log(error);
+          
+        }
         next(error);
         
       }
@@ -114,7 +119,14 @@ let imgPath = req.file?.path;
 
     } catch (error) {
     if(imgPath){
-      fs.unlinkSync(imgPath)
+      try {
+        fs.unlinkSync(imgPath)
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+
     }
     next(error);
     
