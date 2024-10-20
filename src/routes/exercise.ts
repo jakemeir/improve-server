@@ -10,8 +10,7 @@ import {fileStorage,fileFilter } from '../util/multer'
 
 const router = express.Router();
 router.use('/',guard,multer({storage:fileStorage,fileFilter}).single('image'))
-//exerciseValidator ,
-router.post("/",guard,createExercise)
+router.post("/",guard,exerciseValidator,createExercise)
 router.get('/:exerciseId', guard,getExercise)
 router.get('/',guard,getExercises)
 router.put('/:exerciseId',guard,exerciseValidator ,updateExercise)
