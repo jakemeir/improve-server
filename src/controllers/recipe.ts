@@ -1,6 +1,7 @@
 import { Request, Response,NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import recipe from '../models/recipe';
+import fs from 'fs'
 
 export const createRecipe = async (req:Request, res:Response, next:NextFunction)=>{
     try {
@@ -39,3 +40,38 @@ export const createRecipe = async (req:Request, res:Response, next:NextFunction)
         next(error);
     }
 };
+
+
+export const deleteRecipe= async (req: Request, res: Response,next: NextFunction)=> {
+  try{
+   const response  = await recipe.findByIdAndDelete(req.params.recipeId);
+
+   if(!response){
+    const error:CustomError = new Error("recipe not found")
+    error.statusCode = 404
+    throw error;
+  }
+
+
+   const data: ApiResponse = {
+    isSuccessful: true,
+    displayMessage:  null ,
+    exception:  null ,
+    timestamp: new Date(),
+    data:null,
+  };
+  
+    res.status(200).json(data);
+
+    if(response.imgPath){
+      fs.unlinkSync(response.imgPath)
+      
+    }
+
+
+  }catch(error) {
+    next(error);
+   }
+
+
+}
