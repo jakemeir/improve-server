@@ -25,24 +25,26 @@ const exerciseValidator = [
     .trim()
     .notEmpty()
     .withMessage('Number of sets is required.')
-    .isNumeric()
-    .withMessage('Number of sets should contain only number.')
     .custom(value => {
-        if (value >= 10) {
-          Promise.reject('The number must be smaller than 10');
+        if (+value >= 10) {
+          return Promise.reject('The number must be smaller than 10');
         }
+        return true
     }),
+    
     body('times')
     .trim()
     .notEmpty()
     .withMessage('Number of times is required.')
-    .isNumeric()
+    // .isNumeric()
     .withMessage('Number of times should contain only number.')
     .custom(value => {
-        if (value >= 100) {
-          Promise.reject('The number must be smaller than 100');
+        if (+value >= 100) {
+           return Promise.reject('The number must be smaller than 100');
         }
+        return true
     }),
+
 
     body('category')
     .trim()

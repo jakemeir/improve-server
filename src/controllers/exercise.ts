@@ -102,10 +102,15 @@ let imgPath = req.file?.path;
 
     res.status(200).json(data);
 
-    if(imgPath){
-      fs.unlinkSync(response.imgPath)
+    try {
+      if(imgPath){
+        fs.unlinkSync(response.imgPath)
+      }
       
-    }
+     } catch (error) {
+      console.log(error);
+      
+     }
 
     } catch (error) {
     if(imgPath){
@@ -154,6 +159,30 @@ export const getExercises = async (req: Request, res: Response,next: NextFunctio
     next(error);
   }
 }
+
+export const getExercise = async (req: Request, res: Response,next: NextFunction)=> {
+  try {
+    const exercise = await Exercise.findById(req.params.exerciseId);
+
+    if(!exercise){
+      const error:CustomError = new Error("Exercise not found")
+      error.statusCode = 404
+      throw error;
+    }
+    
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage:  null,
+      exception: null ,
+      timestamp: new Date(),
+      data: exercise ,
+    };
+    
+    res.status(200).json(data);
+  } catch (error) {
+   next(error);
+  }
+};
 
 export const deleteExercise= async (req: Request, res: Response,next: NextFunction)=> {
   try{
