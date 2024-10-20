@@ -1,6 +1,6 @@
 import { Request, Response,NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import recipe from '../models/recipe';
+import Recipe from '../models/recipe';
 import fs from 'fs'
 
 export const createRecipe = async (req:Request, res:Response, next:NextFunction)=>{
@@ -16,7 +16,7 @@ export const createRecipe = async (req:Request, res:Response, next:NextFunction)
       throw error;
     }
 
-    const newRecipe = new recipe({
+    const newRecipe = new Recipe({
         name,
         description,
         imgPath,
@@ -44,7 +44,7 @@ export const createRecipe = async (req:Request, res:Response, next:NextFunction)
 
 export const deleteRecipe= async (req: Request, res: Response,next: NextFunction)=> {
   try{
-   const response  = await recipe.findByIdAndDelete(req.params.recipeId);
+   const response  = await Recipe.findByIdAndDelete(req.params.recipeId);
 
    if(!response){
     const error:CustomError = new Error("recipe not found")
@@ -75,3 +75,44 @@ export const deleteRecipe= async (req: Request, res: Response,next: NextFunction
 
 
 }
+
+export const exportRecipe = async (req: Request, res: Response, next: NextFunction) => {
+
+  const escapeCsvValue = (value: string) => {
+    if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+      return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
+  };
+
+  try {
+    res.setHeader('Content-Disposition', 'attachment; filename="recipe-list.csv"');
+    res.setHeader('Content-Type', 'text/csv');
+    res.write('name,description,imgPath,ingredients,instruction\n');
+
+    const cursor = Recipe.find().cursor();
+
+
+    cursor.on('data', (recipe) => {
+      const ingredients = recipe.ingredients.join(';');
+      const csvRow = `${escapeCsvValue(recipe.name)},${escapeCsvValue(recipe.description)},${escapeCsvValue(recipe.imgPath)},${escapeCsvValue(ingredients)},${escapeCsvValue(recipe.instruction)}\n`;
+      res.write(csvRow);
+    });
+
+    cursor.on('end', () => {
+      res.end();
+    });
+
+    cursor.on('error', (err) => {
+      if (!res.headersSent) {
+        next(err);
+      } else {
+        console.error('Error during CSV streaming:', err);
+        res.end();
+      }
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
