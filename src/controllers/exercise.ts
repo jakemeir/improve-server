@@ -191,6 +191,14 @@ export const deleteExercise= async (req: Request, res: Response,next: NextFuncti
 
 export const exportExercise = async (req: Request, res: Response,next: NextFunction)=>{
 
+  const escapeCsvValue = (value: string) => {
+    if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+      return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
+  };
+
+
 try {
 
   res.setHeader('Content-Disposition', 'attachment; filename="exercise-list.csv"');
@@ -200,7 +208,7 @@ try {
   const cursor = Exercise.find().cursor();
 
   cursor.on('data',(exercise)=>{
-    const csvRow = `${exercise.name},${exercise.description},${exercise.sets},${exercise.times},${exercise.category},${exercise.status}\n`;
+    const csvRow = `${escapeCsvValue(exercise.name)},${escapeCsvValue(exercise.description)},${exercise.sets},${exercise.times},${escapeCsvValue(exercise.category)},${exercise.status}\n`;
     res.write(csvRow);
   })
 
@@ -209,12 +217,16 @@ try {
   });
 
   cursor.on('error', (err) => {
-    next(err)
+    if (!res.headersSent) {
+      next(err);
+    } else {
+      console.error('Error during CSV streaming:', err);
+      res.end();
+    }
   });
   
 } catch (error) {
-
-  next(error)
+    next(error)
 }
 
 }
