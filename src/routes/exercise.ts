@@ -9,13 +9,14 @@ import {fileStorage,fileFilter } from '../util/multer'
 
 
 const router = express.Router();
+router.get('/export',guard,exportExercise)
 router.use('/',guard,multer({storage:fileStorage,fileFilter}).single('image'))
 router.post("/",guard,exerciseValidator,createExercise)
 router.get('/:exerciseId', guard,getExercise)
 router.get('/',guard,getExercises)
 router.put('/:exerciseId',guard,exerciseValidator ,updateExercise)
 router.delete('/:exerciseId',guard,deleteExercise)
-router.get('/export',guard,exportExercise)
+
 
 
 export default router;
