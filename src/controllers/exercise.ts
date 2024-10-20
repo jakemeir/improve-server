@@ -217,10 +217,17 @@ export const deleteExercise= async (req: Request, res: Response,next: NextFuncti
   
     res.status(200).json(data);
 
-    if(response.imgPath){
-      fs.unlinkSync(response.imgPath)
+    try {
+      if(response.imgPath){
+        fs.unlinkSync(response.imgPath)
+        
+      }
+    } catch (error) {
+      console.log(error);
       
     }
+
+
 
 
   }catch(error) {
