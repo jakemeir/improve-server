@@ -88,14 +88,14 @@ export const exportRecipe = async (req: Request, res: Response, next: NextFuncti
   try {
     res.setHeader('Content-Disposition', 'attachment; filename="recipe-list.csv"');
     res.setHeader('Content-Type', 'text/csv');
-    res.write('name,description,imgPath,ingredients,instruction\n');
+    res.write('name,description,ingredients,instruction\n');
 
     const cursor = Recipe.find().cursor();
 
 
     cursor.on('data', (recipe) => {
       const ingredients = recipe.ingredients.join(';');
-      const csvRow = `${escapeCsvValue(recipe.name)},${escapeCsvValue(recipe.description)},${escapeCsvValue(recipe.imgPath)},${escapeCsvValue(ingredients)},${escapeCsvValue(recipe.instruction)}\n`;
+      const csvRow = `${escapeCsvValue(recipe.name)},${escapeCsvValue(ingredients)},${escapeCsvValue(recipe.instruction)}\n`;
       res.write(csvRow);
     });
 
