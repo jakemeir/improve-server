@@ -21,7 +21,7 @@ app.use('/swagger', SwaggerUI.serve, SwaggerUI.setup(swagger));
 app.use("/auth",authRoutes)
 app.use("/users",userRoutes);
 app.use('/exercises',exerciseRoutes)
-app.use('/recipe',recipeRoutes);
+app.use('/recipes',recipeRoutes);
  
 
 
