@@ -1,6 +1,6 @@
 import { Request, Response,NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import recipe from '../models/recipe';
+import Recipe from '../models/recipe';
 import fs from "fs";
 
 export const createRecipe = async (req:Request, res:Response, next:NextFunction)=>{

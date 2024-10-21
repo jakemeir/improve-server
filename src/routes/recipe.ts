@@ -8,13 +8,9 @@ import { fileStorage, fileFilter } from '../util/multer';
 
 
 const router = express.Router();
-
 router.use('/', guard, multer({ storage: fileStorage, fileFilter }).single('image'));
-router.post('/', guard, recipeValidator, createRecipe);
-
-
+router.post('/', guard, createRecipe);
 router.delete('/:recipeId',guard,deleteRecipe)
-
 router.get('/export',guard,exportRecipe)
 
 
