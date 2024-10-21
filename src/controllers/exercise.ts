@@ -226,18 +226,12 @@ export const deleteExercise= async (req: Request, res: Response,next: NextFuncti
       console.log(error);
       
     }
-
-
-
-
-  }catch(error) {
+}catch(error) {
     next(error);
    }
-
-
 }
 
-export const exportExercise = async (req: Request, res: Response,next: NextFunction)=>{
+export const exportExercise = async (req: Request, res: Response, next: NextFunction) => {
 
   const escapeCsvValue = (value: string) => {
     if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
@@ -246,35 +240,33 @@ export const exportExercise = async (req: Request, res: Response,next: NextFunct
     return value;
   };
 
+  try {
+    // Set headers for CSV file
+    res.setHeader('Content-Disposition', 'attachment; filename="exercise-list.csv"');
+    res.setHeader('Content-Type', 'text/csv');
+    res.write('name,description,sets,times,category,status\n');
 
-try {
+    // Create a cursor for streaming the data
+    const cursor = Exercise.find().cursor();
 
-  res.setHeader('Content-Disposition', 'attachment; filename="exercise-list.csv"');
-  res.setHeader('Content-Type', 'text/csv');
-  res.write('name,description,sets,times,category,status\n');
-
-  const cursor = Exercise.find().cursor();
-
-  cursor.on('data',(exercise)=>{
-    const csvRow = `${escapeCsvValue(exercise.name)},${escapeCsvValue(exercise.description)},${exercise.sets},${exercise.times},${escapeCsvValue(exercise.category)},${exercise.status}\n`;
-    res.write(csvRow);
-  })
-
-  cursor.on('end', () => {
-    res.end();
-  });
-
-  cursor.on('error', (err) => {
-    if (!res.headersSent) {
-      next(err);
-    } else {
-      console.error('Error during CSV streaming:', err);
-      res.end();
+    for await (const exercise of cursor) {
+      try {
+        // Write CSV row for each exercise
+        const csvRow = `${escapeCsvValue(exercise.name)},${escapeCsvValue(exercise.description as string)},${exercise.sets},${exercise.times},${escapeCsvValue(exercise.category as string)},${exercise.status}\n`;
+        res.write(csvRow);
+      } catch (writeError) {
+        // Catch and handle errors during writing
+        console.error('Error writing CSV row:', writeError);
+        res.end(); // End response if an error occurs
+        return next(writeError);
+      }
     }
-  });
-  
-} catch (error) {
-    next(error)
-}
 
-}
+    // End response once streaming is done
+    res.end();
+
+  } catch (error) {
+    // General error handling
+    next(error);
+  }
+};

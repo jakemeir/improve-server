@@ -104,7 +104,6 @@ export const loginOTP = async (req:Request, res:Response, next:NextFunction)=>{
             throw error;
         }
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -113,44 +112,32 @@ export const loginOTP = async (req:Request, res:Response, next:NextFunction)=>{
             }
           });
 
-          const mailOptions = {
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'Your OTP Code',
-            text: `Your OTP code is: ${otp}`
-          };
+        const mailOptions = {
+          from: process.env.EMAIL,
+          to: email,
+          subject: 'Improve OTP Code',
+          text: `Your OTP code is: ${otp}`
+        };
         
-         
         await transporter.sendMail(mailOptions);
             
-         
-
-
-        
-
         const hashedOtp =  crypto.createHash('sha256').update(otp).digest('hex');
-
         const token = jwt.sign({email:user.email,otp:hashedOtp},
          process.env.PRIVATE_KEY as string,
          {expiresIn:"5m"}
-         )
-
-
-
-         const data: ApiResponse = {
+        )
+        
+        const data: ApiResponse = {
             isSuccessful: true,
             displayMessage: null,
             exception: null,
             timestamp: new Date(),
             data: {token:token},
-          };
+        };
       
-          res.status(200).json(data);
+        res.status(200).json(data);
 
-        
     } catch (error) {
-        console.log(error);
-        
         next(error)
     }
 }
