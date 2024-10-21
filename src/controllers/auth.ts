@@ -41,15 +41,9 @@ export const login = async (req:Request, res:Response, next:NextFunction)=>{
       
           res.status(200).json(data);
 
-
-
-
     } catch (error) {
         next(error)
     }
-
- 
-
 }
 
 
@@ -70,13 +64,11 @@ export const googleCallback = async (req:Request, res:Response, next:NextFunctio
             grant_type: 'authorization_code',
           });
 
-          const { access_token, id_token } = data;
+          const { access_token} = data;
 
           const {  data : {email}} = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
             headers: { Authorization: `Bearer ${access_token}` },
           });
-
-          
 
           const user = await User.findOne({email:email})
 
@@ -93,14 +85,9 @@ export const googleCallback = async (req:Request, res:Response, next:NextFunctio
       
         res.redirect("http://localhost:3000/users")
 
-
-
     } catch (error) {
-        console.log(error);
         next(error)
-        
     }
-
 }
 
 
