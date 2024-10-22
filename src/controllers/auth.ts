@@ -81,8 +81,7 @@ export const googleCallback = async (req: Request, res: Response, next: NextFunc
     );
 
     res.cookie('token', token, {
-      httpOnly: true,
-      maxAge: 3600000,
+
     });
 
     res.redirect("http://localhost:3000/users");

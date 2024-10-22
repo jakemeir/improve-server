@@ -241,32 +241,25 @@ export const exportExercise = async (req: Request, res: Response, next: NextFunc
   };
 
   try {
-    // Set headers for CSV file
     res.setHeader('Content-Disposition', 'attachment; filename="exercise-list.csv"');
     res.setHeader('Content-Type', 'text/csv');
     res.write('name,description,sets,times,category,status\n');
 
-    // Create a cursor for streaming the data
     const cursor = Exercise.find().cursor();
 
     for await (const exercise of cursor) {
       try {
-        // Write CSV row for each exercise
         const csvRow = `${escapeCsvValue(exercise.name)},${escapeCsvValue(exercise.description as string)},${exercise.sets},${exercise.times},${escapeCsvValue(exercise.category as string)},${exercise.status}\n`;
         res.write(csvRow);
       } catch (writeError) {
-        // Catch and handle errors during writing
         console.error('Error writing CSV row:', writeError);
-        res.end(); // End response if an error occurs
+        res.end();
         return next(writeError);
       }
     }
-
-    // End response once streaming is done
     res.end();
 
   } catch (error) {
-    // General error handling
     next(error);
   }
 };
