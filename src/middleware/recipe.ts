@@ -17,10 +17,6 @@ const recipeValidator = [
         .optional()
         .isString().withMessage('Description must be a string.')
         .isLength({ max: 200 }).withMessage('Description can be up to 200 characters long.'),
-    body('imgPath')
-        .notEmpty().withMessage('Image path is required.')
-        .isString().withMessage('Image path must be a string.')
-        .isURL().withMessage('Image path must be a valid URL.'),
     body('ingredients')
         .isArray({ min: 1 }).withMessage('At least one ingredient is required.')
         .custom((value: string[]) => {
