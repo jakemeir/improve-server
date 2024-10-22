@@ -3,65 +3,60 @@ import Exercise from '../models/exercise';
 import { validationResult } from 'express-validator';
 import fs from "fs"
 
-export const  createExercise= async (req:Request, res:Response, next:NextFunction)=>{
-    let imgPath =''
-    
-    try {
-        const { name, description, sets,times,category} = req.body;
-    
-        const result = validationResult(req);
+export const createExercise = async (req: Request, res: Response, next: NextFunction) => {
+  let imgPath = '';
 
-        if(!req.file){
-            const error:CustomError = new Error('no image provided');
-            error.statusCode = 422;
-            throw error;
-        }
+  try {
+    const { name, description, sets, times, category } = req.body;
+    const result = validationResult(req);
 
-        imgPath =  req.file.path;
+    if (!req.file) {
+      const error: CustomError = new Error('No image provided') as CustomError;
+      error.statusCode = 422;
+      throw error;
+    }
     
-        if (!result.isEmpty()) {
-          const error:CustomError = new Error(result.array()[0].msg);
-          error.statusCode = 422;
-          throw error;
-        }
+    imgPath = req.file.path;
 
-    
-    
-        const newExercise = new Exercise({
-          name,
-          description,
-          sets,
-          times,
-          category,
-          imgPath
-        });
-    
-        await newExercise.save();
-    
-        const data: ApiResponse = {
-          isSuccessful: true,
-          displayMessage: null,
-          exception: null,
-          timestamp: new Date(),
-          data: newExercise,
-        };
-    
-        res.status(201).json(data);
-    
-      } catch (error) {
+    if (!result.isEmpty()) {
+      const error: CustomError = new Error(result.array()[0].msg) as CustomError;
+      error.statusCode = 422;
+      throw error;
+    }
 
-        try {
-          if(imgPath){
-            fs.unlinkSync(imgPath)
-        }
-        } catch (error) {
-          console.log(error);
-          
-        }
-        next(error);
-        
+    const newExercise = new Exercise({
+      name,
+      description,
+      sets,
+      times,
+      category,
+      imgPath
+    });
+
+    await newExercise.save();
+
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage: null,
+      exception: null,
+      timestamp: new Date(),
+      data: newExercise,
+    };
+
+    res.status(201).json(data);
+
+  } catch (error) {
+    if (imgPath) {
+      try {
+        fs.unlinkSync(imgPath);
+      } catch (deleteError) {
+        console.error('Error deleting image:', deleteError);
       }
-}
+    }
+    next(error);
+  }
+};
+
 
 
 export const updateExercise = async (req: Request, res: Response, next: NextFunction)=>{
