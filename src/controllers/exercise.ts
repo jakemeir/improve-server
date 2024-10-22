@@ -196,40 +196,38 @@ export const getExercise = async (req: Request, res: Response,next: NextFunction
   }
 };
 
-export const deleteExercise= async (req: Request, res: Response,next: NextFunction)=> {
-  try{
-   const response  = await Exercise.findByIdAndDelete(req.params.exerciseId);
+export const deleteExercise = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const response = await Exercise.findByIdAndDelete(req.params.exerciseId);
+    if (!response) {
+      const error: any = new Error("Exercise not found");
+      error.statusCode = 404;
+      throw error;
+    }
 
-   if(!response){
-    const error:CustomError = new Error("exercise not found")
-    error.statusCode = 404
-    throw error;
-  }
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage: null,
+      exception: null,
+      timestamp: new Date(),
+      data: null,
+    };
 
-
-   const data: ApiResponse = {
-    isSuccessful: true,
-    displayMessage:  null ,
-    exception:  null ,
-    timestamp: new Date(),
-    data:null,
-  };
-  
     res.status(200).json(data);
 
-    try {
-      if(response.imgPath){
-        fs.unlinkSync(response.imgPath)
-        
+    if (response.imgPath) {
+      try {
+        fs.unlinkSync(response.imgPath);
+      } catch (error) {
+        console.error('Error deleting image:', error);
       }
-    } catch (error) {
-      console.log(error);
-      
     }
-}catch(error) {
+
+  } catch (error) {
     next(error);
-   }
-}
+  }
+};
+
 
 export const exportExercise = async (req: Request, res: Response, next: NextFunction) => {
 
