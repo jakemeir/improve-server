@@ -135,42 +135,41 @@ let imgPath = req.file?.path;
 }
 
 
-export const getExercises = async (req: Request, res: Response,next: NextFunction)=>{
-  try{
-    let exercises = null;
-    const query =  req.query.q?.toString().trim();
-    if(!query){
-       exercises = await Exercise.find();
-    }else{
+export const getExercises = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const query = req.query.q?.toString().trim();
+
+    let exercises: typeof Exercise[] = [];
+    if (query) {
       exercises = await Exercise.find({
         $or: [
-            { name: { $regex: query} },
-            { description: { $regex: query} }
-        ]
-    })
+          { name: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } },
+        ],
+      });
+    } else {
+      exercises = await Exercise.find();
     }
 
-    if(exercises.length === 0)exercises = null;
-
-    if(!exercises){
-      const error:CustomError = new Error("exercises not found")
-      error.statusCode = 404
+    if (exercises.length === 0) {
+      const error: CustomError = new Error("Exercises not found") as CustomError;
+      error.statusCode = 404;
       throw error;
     }
+
     const data: ApiResponse = {
       isSuccessful: true,
       displayMessage: null,
       exception: null,
       timestamp: new Date(),
-      data: exercises
+      data: exercises,
     };
-    res.status(200).json(data);
-    
 
-  } catch(error) {
+    res.status(200).json(data);
+  } catch (error) {
     next(error);
   }
-}
+};
 
 export const getExercise = async (req: Request, res: Response,next: NextFunction)=> {
   try {
