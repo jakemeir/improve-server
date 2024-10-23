@@ -246,7 +246,6 @@ export const exportExercise = async (req: Request, res: Response, next: NextFunc
         res.write(csvRow);
       } catch (writeError) {
         console.error('Error writing CSV row:', writeError);
-        res.end();
         return next(writeError);
       }
     }
