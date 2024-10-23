@@ -233,12 +233,12 @@ export const exportExercise = async (req: Request, res: Response, next: NextFunc
   };
 
   try {
+    const cursor = Exercise.find().cursor();
+
     res.setHeader('Content-Disposition', 'attachment; filename="exercise-list.csv"');
     res.setHeader('Content-Type', 'text/csv');
     res.write('name,description,sets,times,category,status\n');
-
-    const cursor = Exercise.find().cursor();
-
+  
     for await (const exercise of cursor) {
       try {
         const csvRow = `${escapeCsvValue(exercise.name)},${escapeCsvValue(exercise.description as string)},
@@ -246,12 +246,15 @@ export const exportExercise = async (req: Request, res: Response, next: NextFunc
         res.write(csvRow);
       } catch (writeError) {
         console.error('Error writing CSV row:', writeError);
-        return next(writeError);
+        continue;
       }
     }
     res.end();
 
   } catch (error) {
-    next(error);
+    if(!res.headersSent){
+      return next(error);
+    }
+    res.end();
   }
 };
