@@ -241,7 +241,8 @@ export const exportExercise = async (req: Request, res: Response, next: NextFunc
 
     for await (const exercise of cursor) {
       try {
-        const csvRow = `${escapeCsvValue(exercise.name)},${escapeCsvValue(exercise.description as string)},${exercise.sets},${exercise.times},${escapeCsvValue(exercise.category as string)},${exercise.status}\n`;
+        const csvRow = `${escapeCsvValue(exercise.name)},${escapeCsvValue(exercise.description as string)},
+        ${exercise.sets},${exercise.times},${escapeCsvValue(exercise.category as string)},${exercise.status}\n`;
         res.write(csvRow);
       } catch (writeError) {
         console.error('Error writing CSV row:', writeError);
