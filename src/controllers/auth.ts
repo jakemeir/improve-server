@@ -48,7 +48,8 @@ export const login = async (req:Request, res:Response, next:NextFunction)=>{
 
 
 export const googleLogin = async (req:Request, res:Response, next:NextFunction)=>{
-    res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(process.env.GOOGLE_CLIENT_ID as string)}&redirect_uri=http://localhost:8080/auth/google/callback&response_type=code&scope=${encodeURIComponent('profile email')}`);
+    res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(process.env.GOOGLE_CLIENT_ID as string)}
+    &redirect_uri=http://localhost:8080/auth/google/callback&response_type=code&scope=${encodeURIComponent('profile email')}`);
 }
 
 export const googleCallback = async (req: Request, res: Response, next: NextFunction) => {
