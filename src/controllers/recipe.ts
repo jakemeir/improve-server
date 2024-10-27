@@ -56,6 +56,43 @@ export const createRecipe = async (req:Request, res:Response, next:NextFunction)
 };
 
 
+export const getRecipes = async (req: Request, res: Response,next: NextFunction)=>{
+  try{
+    let recipes = [];
+    const query =  req.query.q?.toString().trim();
+    if(!query){
+       recipes = await Recipe.find();
+    }else{
+      recipes = await Recipe.find({
+        $or: [
+            { name: { $regex: query} },
+            { description: { $regex: query} }
+        ]
+    })
+    }
+
+
+    if(recipes.length === 0){
+      const error:CustomError = new Error("recipes not found")
+      error.statusCode = 404
+      throw error;
+    }
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage: null,
+      exception: null,
+      timestamp: new Date(),
+      data: recipes
+    };
+    res.status(200).json(data);
+    
+
+  } catch(error) {
+    next(error);
+  }
+}
+
+
 export const deleteRecipe= async (req: Request, res: Response,next: NextFunction)=> {
   try{
    const response  = await Recipe.findByIdAndDelete(req.params.recipeId);
