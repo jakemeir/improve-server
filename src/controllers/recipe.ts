@@ -66,7 +66,8 @@ export const getRecipes = async (req: Request, res: Response,next: NextFunction)
       recipes = await Recipe.find({
         $or: [
             { name: { $regex: query} },
-            { description: { $regex: query} }
+            { description: { $regex: query} },
+            { ingredients: { $elemMatch: { $regex: query } } }
         ]
     })
     }
