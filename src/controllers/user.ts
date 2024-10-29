@@ -6,7 +6,7 @@ import User from '../models/user'
 export const  createUser = async (req:Request, res:Response, next:NextFunction)=>{
 
   try {
-    const { firstName,lastName, phone, email,password} = req.body;
+    const { firstName,lastName, phone, email,password,additionalData} = req.body;
 
     const result = validationResult(req);
 
@@ -24,6 +24,7 @@ export const  createUser = async (req:Request, res:Response, next:NextFunction)=
       phone,
       email,
       password: hashedPassword,
+      additionalData
     });
 
     await newUser.save();
