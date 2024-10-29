@@ -55,6 +55,66 @@ export const createRecipe = async (req:Request, res:Response, next:NextFunction)
     }
 };
 
+export const UpdateRecipe = async (req: Request, res: Response,next: NextFunction)=>{
+
+  let imgPath = req.file?.path;
+
+  try {
+    const { name, description, ingredients, instruction } = req.body;
+
+    const result = validationResult(req);
+
+    if (!result.isEmpty()) {
+      const error:CustomError = new Error(result.array()[0].msg);
+      error.statusCode = 422;
+      throw error;
+    }
+
+    const updatedRecipe = {
+      name,
+      description,
+      imgPath,
+      ingredients,
+      instruction,
+      ...(req.file && { imgPath: req.file.path })
+    }
+
+    const response =  await Recipe.findByIdAndUpdate(req.params.recipeId,updatedRecipe,{ new: true });
+
+    if(!response){
+      const error: CustomError = new Error("Recipe not found")
+      error.statusCode = 404
+      throw error;
+    }
+
+    const data: ApiResponse = {
+      isSuccessful: true,
+      displayMessage: null,
+      exception: null,
+      timestamp: new Date(),
+      data: response,
+    };
+
+    res.status(200).json(data);
+
+    try {
+      if(imgPath){
+        fs.unlinkSync(response.imgPath);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  } catch (error) {
+    if (imgPath) {
+      try {
+        fs.unlinkSync(imgPath);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    next (error);
+  }
+};
 
 export const getRecipes = async (req: Request, res: Response,next: NextFunction)=>{
   try{

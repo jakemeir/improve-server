@@ -89,10 +89,10 @@ let imgPath = req.file?.path;
       ...(req.file && { imgPath: req.file.path }) 
     };
 
-    const response =  await Exercise.findByIdAndUpdate(req.params.exerciseId,updatedExercise);
+    const response =  await Exercise.findByIdAndUpdate(req.params.exerciseId,updatedExercise,{ new: true });
 
     if(!response){
-      const error:CustomError = new Error("user not found")
+      const error:CustomError = new Error("Exercise not found")
       error.statusCode = 404
       throw error;
     }
