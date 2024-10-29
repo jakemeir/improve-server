@@ -89,7 +89,7 @@ let imgPath = req.file?.path;
       ...(req.file && { imgPath: req.file.path }) 
     };
 
-    const response =  await Exercise.findByIdAndUpdate(req.params.exerciseId,updatedExercise,{ new: true });
+    const response =  await Exercise.findByIdAndUpdate(req.params.exerciseId,updatedExercise);
 
     if(!response){
       const error:CustomError = new Error("Exercise not found")

@@ -79,7 +79,7 @@ export const UpdateRecipe = async (req: Request, res: Response,next: NextFunctio
       ...(req.file && { imgPath: req.file.path })
     }
 
-    const response =  await Recipe.findByIdAndUpdate(req.params.recipeId,updatedRecipe,{ new: true });
+    const response =  await Recipe.findByIdAndUpdate(req.params.recipeId,updatedRecipe);
 
     if(!response){
       const error: CustomError = new Error("Recipe not found")
